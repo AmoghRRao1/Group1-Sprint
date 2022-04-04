@@ -3,7 +3,7 @@ package com.Group1.Sprint.Models;
 import javax.persistence.*;
 
 @Entity
-@Table(name="welcome")
+@Table(name="Bidder")
 public class BidderModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
