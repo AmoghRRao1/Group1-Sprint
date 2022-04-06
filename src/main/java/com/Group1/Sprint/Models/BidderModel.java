@@ -1,49 +1,53 @@
 package com.Group1.Sprint.Models;
 
 import javax.persistence.*;
+import java.util.Map;
 
 @Entity
-@Table(name="Bidder")
+@Table(name = "bidder")
 public class BidderModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name="Email")
-    private String email;
-
-    @Column(name="name")
-    private String name;
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private int bidderId;
 
     @Column(name="password")
-    private String password;
+    public String password;
+    @Column(name="name")
+    private String name;
+    @Column(name="email")
+    private String email;
 
-    @Column(name="points", columnDefinition = "integer default 0")
-    private int points;
+    @Column(name="points")
+    private int points=0;
 
-    public BidderModel() {
+    public BidderModel(){}
+    public BidderModel(Map<String,String> details)
+    {
+        if(details.get("email")!=null)
+        {
+            this.email = details.get("email");
+        }
+        if(details.get("password")!=null)
+        {
+            this.password = details.get("password");
+        }
+        this.name = details.get("name");
     }
 
-    public BidderModel(String email, String name, String password) {
-        this.email = email;
-        this.name = name;
+    public int getBidderId() {
+        return bidderId;
+    }
+
+    public void setBidderId(int bidderId) {
+        this.bidderId = bidderId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getName() {
@@ -54,12 +58,12 @@ public class BidderModel {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getPoints() {
