@@ -75,4 +75,42 @@ public class AdminService implements IAdminServices{
         tournamentRepository.save(tournament.get());
         return true;
     }
+    @Override
+    public boolean createTournament(Map<String,String> tournamentDetails) throws RuntimeException
+    {
+        if(tournamentDetails.get("tournamentId")==null)
+        {
+            throw new RuntimeException("no id given");
+        }
+        Optional<TournamentModel> tournament = tournamentRepository.findById(Integer.parseInt(tournamentDetails.get("tournamentId")));;
+        if(tournament.isPresent())
+        {
+            throw new TournamentAlreadyExistsException("Tournament With This ID Already Exists");
+        }
+        if(tournamentDetails.get("teamIds")==null)
+        {
+            throw new RuntimeException("no teams given");
+        }
+
+
+        TournamentModel tournamentModel = new TournamentModel(Integer.parseInt(tournamentDetails.get("tournamentId")));
+        ArrayList<Integer> lst = new ArrayList<Integer>();
+        for (String field : tournamentDetails.get("teamIds").split(" +"))
+            lst.add(Integer.parseInt(field));
+        tournamentModel.setTeamIds(lst);
+        for(int i : tournamentModel.getTeamIds()) {
+            if(teamRepository.findById(i).isPresent()==false){
+                throw new RuntimeException("Team doesnt exist");
+            }
+        }
+
+        for(int i : tournamentModel.getTeamIds())
+        {
+
+            PointsModel pointsModel = new PointsModel(tournamentModel.getTournamentId(),i);
+            pointsRepository.save(pointsModel);
+        }
+        tournamentRepository.save(tournamentModel);
+        return true;
+    }
 }

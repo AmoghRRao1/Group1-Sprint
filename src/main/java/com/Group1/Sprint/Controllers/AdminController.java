@@ -101,4 +101,21 @@ public class AdminController {
         return ResponseEntity.ok().body("{Status:Successful");
 
     }
+    @PostMapping("/createTournament")
+    public ResponseEntity<Map<String, String>> createTournament(@RequestBody Map<String,String> request)
+    {
+        Map<String, String> response = new HashMap<>();
+        try {
+            if (adminServices.createTournament(request)) {
+                response.put("Status", "Successful");
+            }
+        }
+        catch(Exception e)
+        {
+            response.put("Status","Failed");
+            response.put("Error",e.getMessage());
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+    }
 }
