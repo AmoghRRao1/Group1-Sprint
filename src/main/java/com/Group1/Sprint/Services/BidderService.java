@@ -1,5 +1,8 @@
 package com.Group1.Sprint.Services;
 
+import com.Group1.Sprint.Exceptions.BidderExistsException;
+import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
+import com.Group1.Sprint.Models.BidderModel;
 import com.Group1.Sprint.Models.BidsModel;
 import com.Group1.Sprint.Models.MatchesModel;
 import com.Group1.Sprint.Models.TeamModel;
@@ -26,6 +29,29 @@ public class BidderService implements IBidderService {
 
     @Autowired
     BidsRepository bidsRepository;
+
+    @Override
+    public boolean register(BidderModel obj) throws RuntimeException
+    {
+        if(obj.getName()==null)
+        {
+            throw new UserDetailsMissingException("Please Enter Name");
+        }
+        if(obj.getEmail()==null)
+        {
+            throw new UserDetailsMissingException("Please Enter Email");
+        }
+        Optional<BidderModel> bidder =bidderRepository.findByEmail(obj.getEmail());
+        if(bidder.isPresent()){
+            throw new BidderExistsException("Account already exists with this email");
+        }
+        if(obj.getPassword()==null)
+        {
+            throw new UserDetailsMissingException("Please Enter Password");
+        }
+        bidderRepository.save(obj);
+        return true;
+    }
 
     @Override
     public boolean bid(Map<String,Integer> bidDetails, int bidderId)

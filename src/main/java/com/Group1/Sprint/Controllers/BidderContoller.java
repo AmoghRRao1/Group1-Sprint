@@ -1,5 +1,6 @@
 package com.Group1.Sprint.Controllers;
 
+import com.Group1.Sprint.Models.BidderModel;
 import com.Group1.Sprint.Services.IBidderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,4 +36,25 @@ public class BidderContoller {
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> register(@RequestBody BidderModel userDetails)
+    {
+        Map<String, String> response = new HashMap<>();
+        try
+        {
+            if(bidderService.register(userDetails))
+            {
+                response.put("Status","Successful");
+                //response.put("SessionID","1234");
+            }
+        }
+        catch(Exception e)
+        {
+            response.put("Status","Failed");
+            response.put("Error",e.getMessage());
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+    }
 }
+
