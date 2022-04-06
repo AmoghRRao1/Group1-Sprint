@@ -10,4 +10,5 @@ import java.util.Map;
 @Service
 public interface IAdminServices {
 
+    public boolean scheduleMatches(Map<String, String> matchDetails,int tournamentId);
 }
