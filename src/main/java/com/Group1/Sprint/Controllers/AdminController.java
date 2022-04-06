@@ -2,7 +2,9 @@ package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
 
+import com.Group1.Sprint.Models.MatchesModel;
 import com.Group1.Sprint.Models.TeamModel;
+import com.Group1.Sprint.Models.TournamentModel;
 import com.Group1.Sprint.Repositories.MatchesRepository;
 import com.Group1.Sprint.Repositories.TeamRepository;
 import com.Group1.Sprint.Repositories.TournamentRepository;
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 public class AdminController {
@@ -99,7 +103,7 @@ public class AdminController {
     }
 
     @PostMapping("/createTeam")
-    public ResponseEntity<String> createTeam(Map<String,String> teamDetails)
+    public ResponseEntity<Map<String,String>> createTeam(@RequestBody Map<String,String> teamDetails)
     {
         Map<String, String> response = new HashMap<>();
         if(teamDetails.get("teamname")==null)
@@ -112,11 +116,12 @@ public class AdminController {
             response.put("Status","Failed");
             response.put("Error","Enter Number of players");
         }
-        TeamModel teamModel =new TeamModel(teamDetails.get("teamname"),teamDetails.get("teamcount"));
+        TeamModel teamModel = new TeamModel(teamDetails.get("teamname"),teamDetails.get("teamcount"));
         teamRepository.save(teamModel);
-        return ResponseEntity.ok().body("{Status:Successful");
-
+        response.put("Status","Successful");
+        return ResponseEntity.ok().body(response);
     }
+
     @PostMapping("/createTournament")
     public ResponseEntity<Map<String, String>> createTournament(@RequestBody Map<String,String> request)
     {
@@ -134,22 +139,39 @@ public class AdminController {
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
     }
-        @PutMapping("/{id}/setWinner")
-        public ResponseEntity<Map<String, String>> setWinner(@RequestBody Map<String, String> winner, @PathVariable(value = "id") int matchId)
+    @PutMapping("/{id}/setWinner")
+    public ResponseEntity<Map<String, String>> setWinner(@RequestBody Map<String, String> winner, @PathVariable(value = "id") int matchId)
+    {
+        Map<String, String> response = new HashMap<>();
+        try
         {
-            Map<String, String> response = new HashMap<>();
-            try
-            {
-                if (adminServices.setWinner(winner,matchId)) {
-                    response.put("Status", "Successful");
-                }
+            if (adminServices.setWinner(winner,matchId)) {
+                response.put("Status", "Successful");
             }
-            catch(Exception e)
-            {
-                response.put("Status","Failed");
-                response.put("Error",e.getMessage());
-                return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
-            }
-            return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
         }
+        catch(Exception e)
+        {
+            response.put("Status","Failed");
+            response.put("Error",e.getMessage());
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+    }
+    @GetMapping("/getMatchDetails/{id}")
+    public ResponseEntity<MatchesModel> getMatchDetails(@PathVariable(value = "id")int matchId)
+    {
+        return adminServices.getMatchDetails(matchId);
+    }
+    @GetMapping("/getMatches/{id}")
+    public ResponseEntity<List<MatchesModel>> getMatches(@PathVariable(value = "id") int tournamentId)
+    {
+        Optional<TournamentModel> tour = tournamentRepository.findById(tournamentId);
+
+        if(tour.isPresent()) {
+            return ResponseEntity.ok().body(tour.get().getMatches());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
