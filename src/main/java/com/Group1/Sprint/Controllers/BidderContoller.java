@@ -16,6 +16,28 @@ public class BidderContoller {
 
     @Autowired
     IBidderService bidderService;
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String,String> loginDetails)
+    {
+        Map<String, String> response = new HashMap<>();
+        try
+        {
+            if(bidderService.login(loginDetails))
+            {
+                response.put("Status","Successful");
+                response.put("SessionID","1234");
+                return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+            }
+        }
+        catch(Exception e)
+        {
+            response.put("Status","Failed");
+            response.put("Error",e.getMessage());
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.NOT_FOUND);
+    }
+
 
     @PostMapping("/{id}/bid")
     public ResponseEntity<Map<String, String>> bid(@RequestBody Map<String,Integer> bidDetails, @PathVariable(value = "id") int bidderId)

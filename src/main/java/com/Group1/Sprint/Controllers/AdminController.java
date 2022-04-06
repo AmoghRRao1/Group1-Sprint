@@ -1,6 +1,11 @@
 package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
+
+import com.Group1.Sprint.Models.TeamModel;
+import com.Group1.Sprint.Repositories.MatchesRepository;
+import com.Group1.Sprint.Repositories.TeamRepository;
+import com.Group1.Sprint.Repositories.TournamentRepository;
 import com.Group1.Sprint.Services.IAdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,9 +16,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class AdminController {
     @Autowired
     IAdminServices adminServices;
+
+
+    @Autowired
+    TournamentRepository tournamentRepository;
+
+    @Autowired
+    MatchesRepository matchesRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
+  
     private String adminusername="admin";
     private String adminpassword="admin123";
     @PostMapping("/login")
@@ -47,6 +64,7 @@ public class AdminController {
 
     }
 
+
     @PostMapping("/tournament/{id}/scheduleMatches")
     public ResponseEntity<Map<String, String>> scheduleMatches(@RequestBody Map<String, String> matchDetails,@PathVariable(value = "id") int tournamentId)
     {
@@ -63,5 +81,24 @@ public class AdminController {
             return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+
+    @PostMapping("/createTeam")
+    public ResponseEntity<String> createTeam(Map<String,String> teamDetails)
+    {
+        Map<String, String> response = new HashMap<>();
+        if(teamDetails.get("teamname")==null)
+        {
+            response.put("Status","Failed");
+            response.put("Error","Enter Team Name");
+        }
+        if(teamDetails.get("teamcount")==null)
+        {
+            response.put("Status","Failed");
+            response.put("Error","Enter Number of players");
+        }
+        TeamModel teamModel =new TeamModel(teamDetails.get("teamname"),teamDetails.get("teamcount"));
+        teamRepository.save(teamModel);
+        return ResponseEntity.ok().body("{Status:Successful");
+
     }
 }

@@ -31,6 +31,36 @@ public class BidderService implements IBidderService {
     BidsRepository bidsRepository;
 
     @Override
+    public boolean login(Map<String,String> loginDetails) throws RuntimeException
+    {
+        if(!loginDetails.containsKey("email"))
+        {
+            throw new EmailMissingException("Please Enter Email");
+        }
+        if(!loginDetails.containsKey("password"))
+        {
+            throw new EmailMissingException("Please Enter Password");
+        }
+        Optional<BidderModel> bidder = bidderRepository.findByEmail(loginDetails.get("email"));
+        if(bidder.isPresent())
+        {
+            if(bidder.get().getPassword().equals(loginDetails.get("password")))
+            {
+
+                return true;
+            }
+            else {
+                throw new RuntimeException("Incorrect Details");
+            }
+        }
+        else
+        {
+            throw new BidderNotRegisteredException("Please Register");
+        }
+
+    }
+
+    @Override
     public boolean register(BidderModel obj) throws RuntimeException
     {
         if(obj.getName()==null)
