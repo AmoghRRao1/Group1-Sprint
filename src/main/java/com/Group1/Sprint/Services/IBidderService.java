@@ -8,4 +8,5 @@ import java.util.Map;
 
 @Service
 public interface IBidderService {
+    public boolean bid(Map<String,Integer> bidDetails,int bidderId);
 }
