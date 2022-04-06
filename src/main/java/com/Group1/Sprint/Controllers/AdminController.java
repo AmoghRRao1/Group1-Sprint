@@ -1,7 +1,6 @@
 package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
-
 import com.Group1.Sprint.Models.MatchesModel;
 import com.Group1.Sprint.Models.TeamModel;
 import com.Group1.Sprint.Models.TournamentModel;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +78,7 @@ public class AdminController {
         } catch (Exception e) {
             response.put("Status", "Failed");
             response.put("Error", e.getMessage());
-            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
     }
