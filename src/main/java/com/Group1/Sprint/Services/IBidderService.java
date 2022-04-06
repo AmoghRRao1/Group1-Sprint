@@ -8,5 +8,6 @@ import java.util.Map;
 
 @Service
 public interface IBidderService {
+    public boolean register(BidderModel userDetails) ;
     public boolean bid(Map<String,Integer> bidDetails,int bidderId);
 }
