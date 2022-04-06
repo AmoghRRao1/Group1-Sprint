@@ -96,7 +96,7 @@ public class AdminController {
         {
             response.put("Status","Failed");
             response.put("Error",e.getMessage());
-            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
     }
