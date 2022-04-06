@@ -12,5 +12,7 @@ public interface IAdminServices {
 
     public boolean scheduleMatches(Map<String, String> matchDetails,int tournamentId);
     public boolean rescheduleMatches( Map<String, String> matchDetails, int matchId);
+    public boolean setWinner(Map<String, String> winner, int matchId);
+    public boolean createTournament(Map<String,String> tournamentDetails);
 
 }
