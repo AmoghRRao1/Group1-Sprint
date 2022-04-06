@@ -113,4 +113,44 @@ public class AdminService implements IAdminServices{
         tournamentRepository.save(tournamentModel);
         return true;
     }
+    @Override
+    public boolean setWinner(Map<String, String> winner, int matchId) {
+        Optional<MatchesModel> match = matchesRepository.findById(matchId);
+        if(!match.isPresent())
+        {
+            throw new RuntimeException("Match Doesnt exsits");
+        }
+        if(winner.get("winnerId") == null) {
+            throw new RuntimeException("Please Enter Winner");
+        }
+
+        Optional<TeamModel> teamModel = teamRepository.findById(Integer.parseInt(winner.get("winnerId")));
+        match.get().setWinner(teamModel.get().getTeamName());
+        match.get().setWinnerId(teamModel.get().getTeamId());
+        matchesRepository.save(match.get());
+        //points update
+        List<PointsModel> pointsModel = pointsRepository.findByTournamentId(match.get().getTournament().getTournamentId());
+        for(PointsModel i : pointsModel)
+        {
+            if(i.getTeamId()== Integer.parseInt(winner.get("winnerId")))
+            {
+                i.setPoints(i.getPoints()+1);
+                pointsRepository.save(i);
+            }
+        }
+        //update bidder points
+        List<BidsModel> bidderModels = bidsRepository.findByMatchId(match.get().getMatchId());
+        for(BidsModel i : bidderModels)
+        {
+            if(i.getTeamId() == Integer.parseInt(winner.get("winnerId")))
+            {
+                Optional<BidderModel> bidderModel = bidderRepository.findById(i.getBidderId());
+                bidderModel.get().setPoints(bidderModel.get().getPoints()+1);
+                bidderRepository.save(bidderModel.get());
+
+            }
+        }
+        return true;
+    }
+
 }
