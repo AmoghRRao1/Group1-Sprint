@@ -76,6 +76,32 @@ public class AdminService implements IAdminServices{
         return true;
     }
     @Override
+    public boolean rescheduleMatches( Map<String, String> matchDetails, int matchId) throws RuntimeException
+    {
+        Optional<MatchesModel> match = matchesRepository.findById(matchId);
+        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        if(!match.isPresent())
+        {
+            throw new RuntimeException("Match Doesnt exsits");
+        }
+        MatchesModel matchs = match.get();
+        if(matchDetails.get("matchdate") != null)
+        {
+            LocalDate newlocalDate = LocalDate.parse(matchDetails.get("matchdate"), dateformatter);
+            matchs.setMatchDate(newlocalDate);
+        }
+        if(matchDetails.get("matchtime") != null)
+        {
+            LocalTime newlocaltime = LocalTime.parse(matchDetails.get("matchtime"), timeformatter);
+            matchs.setMatchTime(newlocaltime);
+        }
+        matchesRepository.save(matchs);
+        return true;
+    }
+
+    @Override
     public boolean createTournament(Map<String,String> tournamentDetails) throws RuntimeException
     {
         if(tournamentDetails.get("tournamentId")==null)
