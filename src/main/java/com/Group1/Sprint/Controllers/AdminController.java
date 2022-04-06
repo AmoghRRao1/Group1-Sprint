@@ -118,4 +118,22 @@ public class AdminController {
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
     }
+        @PutMapping("/{id}/setWinner")
+        public ResponseEntity<Map<String, String>> setWinner(@RequestBody Map<String, String> winner, @PathVariable(value = "id") int matchId)
+        {
+            Map<String, String> response = new HashMap<>();
+            try
+            {
+                if (adminServices.setWinner(winner,matchId)) {
+                    response.put("Status", "Successful");
+                }
+            }
+            catch(Exception e)
+            {
+                response.put("Status","Failed");
+                response.put("Error",e.getMessage());
+                return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+            }
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+        }
 }
