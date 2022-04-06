@@ -11,4 +11,6 @@ import java.util.Map;
 public interface IAdminServices {
 
     public boolean scheduleMatches(Map<String, String> matchDetails,int tournamentId);
+    public boolean rescheduleMatches( Map<String, String> matchDetails, int matchId);
+
 }
