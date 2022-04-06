@@ -66,21 +66,19 @@ public class AdminController {
 
 
     @PostMapping("/tournament/{id}/scheduleMatches")
-    public ResponseEntity<Map<String, String>> scheduleMatches(@RequestBody Map<String, String> matchDetails,@PathVariable(value = "id") int tournamentId)
-    {
+    public ResponseEntity<Map<String, String>> scheduleMatches(@RequestBody Map<String, String> matchDetails,@PathVariable(value = "id") int tournamentId) {
         Map<String, String> response = new HashMap<>();
         try {
-            if (adminServices.scheduleMatches(matchDetails,tournamentId)) {
+            if (adminServices.scheduleMatches(matchDetails, tournamentId)) {
                 response.put("Status", "Successful");
             }
-        }
-        catch(Exception e)
-        {
-            response.put("Status","Failed");
-            response.put("Error",e.getMessage());
+        } catch (Exception e) {
+            response.put("Status", "Failed");
+            response.put("Error", e.getMessage());
             return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+    }
 
     @PostMapping("/createTeam")
     public ResponseEntity<String> createTeam(Map<String,String> teamDetails)
