@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-
+@RestController
+@RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
     IAdminServices adminServices;
