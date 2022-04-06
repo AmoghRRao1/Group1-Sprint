@@ -1,6 +1,7 @@
 package com.Group1.Sprint.Services;
 
 import com.Group1.Sprint.Exceptions.BidderExistsException;
+import com.Group1.Sprint.Exceptions.BidderNotRegisteredException;
 import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
 import com.Group1.Sprint.Models.BidderModel;
 import com.Group1.Sprint.Models.BidsModel;
@@ -13,8 +14,11 @@ import com.Group1.Sprint.Repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BidderService implements IBidderService {
@@ -35,11 +39,11 @@ public class BidderService implements IBidderService {
     {
         if(!loginDetails.containsKey("email"))
         {
-            throw new EmailMissingException("Please Enter Email");
+            throw new UserDetailsMissingException("Please Enter Email");
         }
         if(!loginDetails.containsKey("password"))
         {
-            throw new EmailMissingException("Please Enter Password");
+            throw new UserDetailsMissingException("Please Enter Password");
         }
         Optional<BidderModel> bidder = bidderRepository.findByEmail(loginDetails.get("email"));
         if(bidder.isPresent())
@@ -104,6 +108,14 @@ public class BidderService implements IBidderService {
         bidsRepository.save(bidsModel);
 
         return true;
+    }
+
+    @Override
+    public List<BidderModel> showLeaderBoard()
+    {
+        List<BidderModel> lead = bidderRepository.findAll();
+        lead = lead.stream().sorted(Comparator.comparingInt(BidderModel::getPoints).reversed()).collect(Collectors.toList());
+        return lead.subList(0, 3);
     }
 
 

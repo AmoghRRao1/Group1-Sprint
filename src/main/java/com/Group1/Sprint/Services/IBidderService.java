@@ -10,4 +10,8 @@ import java.util.Map;
 public interface IBidderService {
     public boolean register(BidderModel userDetails) ;
     public boolean bid(Map<String,Integer> bidDetails,int bidderId);
+    public boolean login(Map<String,String> loginDetails);
+
+    List<BidderModel> showLeaderBoard();
+
 }

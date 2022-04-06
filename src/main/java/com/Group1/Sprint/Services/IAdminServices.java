@@ -14,5 +14,5 @@ public interface IAdminServices {
     public boolean rescheduleMatches( Map<String, String> matchDetails, int matchId);
     public boolean setWinner(Map<String, String> winner, int matchId);
     public boolean createTournament(Map<String,String> tournamentDetails);
-
+    ResponseEntity<MatchesModel> getMatchDetails(int matchId);
 }

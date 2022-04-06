@@ -6,6 +6,7 @@ import com.Group1.Sprint.Exceptions.TournamentDoesNotExistException;
 import com.Group1.Sprint.Models.*;
 import com.Group1.Sprint.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -179,6 +180,18 @@ public class AdminService implements IAdminServices{
             }
         }
         return true;
+
+    }
+    @Override
+    public ResponseEntity<MatchesModel> getMatchDetails(int matchId) {
+
+        Optional<MatchesModel> match = matchesRepository.findById(matchId);
+        if(match.isPresent()) {
+            return ResponseEntity.ok().body(match.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
 }
