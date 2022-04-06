@@ -3,6 +3,10 @@ package com.Group1.Sprint.Services;
 import com.Group1.Sprint.Models.BidsModel;
 import com.Group1.Sprint.Models.MatchesModel;
 import com.Group1.Sprint.Models.TeamModel;
+import com.Group1.Sprint.Repositories.BidderRepository;
+import com.Group1.Sprint.Repositories.BidsRepository;
+import com.Group1.Sprint.Repositories.MatchesRepository;
+import com.Group1.Sprint.Repositories.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class BidderService<BidsRepository, TeamRepository, MatchesRepository, BidderRepository> implements IBidderService {
+public class BidderService implements IBidderService {
     @Autowired
     BidderRepository bidderRepository;
 
