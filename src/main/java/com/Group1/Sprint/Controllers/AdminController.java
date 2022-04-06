@@ -1,6 +1,7 @@
 package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Exceptions.UserDetailsMissingException;
+
 import com.Group1.Sprint.Models.TeamModel;
 import com.Group1.Sprint.Repositories.MatchesRepository;
 import com.Group1.Sprint.Repositories.TeamRepository;
@@ -20,6 +21,7 @@ public class AdminController {
     @Autowired
     IAdminServices adminServices;
 
+
     @Autowired
     TournamentRepository tournamentRepository;
 
@@ -28,6 +30,7 @@ public class AdminController {
 
     @Autowired
     TeamRepository teamRepository;
+  
     private String adminusername="admin";
     private String adminpassword="admin123";
     @PostMapping("/login")
@@ -60,6 +63,25 @@ public class AdminController {
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.NOT_FOUND);
 
     }
+
+
+    @PostMapping("/tournament/{id}/scheduleMatches")
+    public ResponseEntity<Map<String, String>> scheduleMatches(@RequestBody Map<String, String> matchDetails,@PathVariable(value = "id") int tournamentId)
+    {
+        Map<String, String> response = new HashMap<>();
+        try {
+            if (adminServices.scheduleMatches(matchDetails,tournamentId)) {
+                response.put("Status", "Successful");
+            }
+        }
+        catch(Exception e)
+        {
+            response.put("Status","Failed");
+            response.put("Error",e.getMessage());
+            return new ResponseEntity<Map<String, String>>(response, HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
+
     @PostMapping("/createTeam")
     public ResponseEntity<String> createTeam(Map<String,String> teamDetails)
     {
@@ -77,5 +99,6 @@ public class AdminController {
         TeamModel teamModel =new TeamModel(teamDetails.get("teamname"),teamDetails.get("teamcount"));
         teamRepository.save(teamModel);
         return ResponseEntity.ok().body("{Status:Successful");
+
     }
 }
