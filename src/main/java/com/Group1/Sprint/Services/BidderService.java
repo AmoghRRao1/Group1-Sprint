@@ -97,7 +97,9 @@ public class BidderService implements IBidderService {
         Optional<TeamModel> team = teamRepository.findById(bidDetails.get("teamId"));
 
         if(!match.isPresent()){ throw new RuntimeException("Match Not Present");}
+        if(match.get().getTeam1()!= bidDetails.get("teamId") && match.get().getTeam2()!= bidDetails.get("teamId")){ throw new RuntimeException("This Team is not Playing this Match");}
         if(!team.isPresent()){throw new RuntimeException("Team Not Present");}
+        if(match.get().getWinnerId()!=-1){throw new RuntimeException("Cannot Bid on this match, Winner already declared");}
 
         MatchesModel m = match.get();
         TeamModel t = team.get();
