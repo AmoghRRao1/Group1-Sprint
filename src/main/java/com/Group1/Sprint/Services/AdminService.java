@@ -72,7 +72,7 @@ public class AdminService implements IAdminServices{
             model.setTeam2(Integer.parseInt(matchDetails.get("team2")));
         }
 
-
+        model.setTournamentId(tournament.get().getTournamentId());
         MatchesModel savedMatch = matchesRepository.save(model);
         tournament.get().getMatches().add(savedMatch);
         tournamentRepository.save(tournament.get());
@@ -158,7 +158,7 @@ public class AdminService implements IAdminServices{
         match.get().setWinnerId(teamModel.get().getTeamId());
         matchesRepository.save(match.get());
         //points update
-        List<PointsModel> pointsModel = pointsRepository.findByTournamentId(match.get().getTournament().getTournamentId());
+        List<PointsModel> pointsModel = pointsRepository.findByTournamentId(match.get().getTournamentId());
         for(PointsModel i : pointsModel)
         {
             if(i.getTeamId()== Integer.parseInt(winner.get("winnerId")))
