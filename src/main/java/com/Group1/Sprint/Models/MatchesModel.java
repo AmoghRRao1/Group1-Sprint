@@ -28,6 +28,9 @@ public class MatchesModel {
     @JoinColumn(name = "tournamentId")
     private TournamentModel tournament;
 
+    @Column(name="tournamentIdint")
+    private int tournamentId;
+
     @Column(name="winner")
     private String winner="TBA";
 
@@ -77,9 +80,9 @@ public class MatchesModel {
         this.winnerId = winnerId;
     }
 
-    public TournamentModel getTournament() {
+    /*public TournamentModel getTournament() {
         return tournament;
-    }
+    }*/
 
     public int getTeam1() {
         return team1;
@@ -99,5 +102,13 @@ public class MatchesModel {
 
     public int getWinnerId() {
         return winnerId;
+    }
+
+    public int getTournamentId() {
+        return tournamentId;
+    }
+
+    public void setTournamentId(int tournamentId) {
+        this.tournamentId = tournamentId;
     }
 }
