@@ -8,6 +8,8 @@ import com.Group1.Sprint.Repositories.MatchesRepository;
 import com.Group1.Sprint.Repositories.TeamRepository;
 import com.Group1.Sprint.Repositories.TournamentRepository;
 import com.Group1.Sprint.Services.IAdminServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,11 +102,13 @@ public class AdminController {
         }
         return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
     }
-
+    Logger logger = LoggerFactory.getLogger(AdminController.class);
+    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/createTeam")
     public ResponseEntity<Map<String,String>> createTeam(@RequestBody Map<String,String> teamDetails)
     {
         Map<String, String> response = new HashMap<>();
+
         if(teamDetails.get("teamname")==null)
         {
             response.put("Status","Failed");
