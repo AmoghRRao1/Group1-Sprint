@@ -2,11 +2,14 @@ package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Models.BidderModel;
 import com.Group1.Sprint.Services.IBidderService;
+import com.Group1.Sprint.Services.JWTutil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,10 @@ public class BidderContoller {
 
     @Autowired
     IBidderService bidderService;
+
+    @Autowired
+    private JWTutil jwTutil;
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String,String> loginDetails)
     {
@@ -25,8 +32,9 @@ public class BidderContoller {
         {
             if(bidderService.login(loginDetails))
             {
+                String to =this.jwTutil.generateToken(new User(loginDetails.get("email"),loginDetails.get("password"),new ArrayList<>()));
                 response.put("Status","Successful");
-                response.put("SessionID","1234");
+                response.put("Token",to);
                 return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
             }
         }
@@ -67,7 +75,9 @@ public class BidderContoller {
         {
             if(bidderService.register(userDetails))
             {
+                String to =this.jwTutil.generateToken(new User(userDetails.getEmail(),userDetails.getPassword(),new ArrayList<>()));
                 response.put("Status","Successful");
+                response.put("Token",to);
                 //response.put("SessionID","1234");
             }
         }
