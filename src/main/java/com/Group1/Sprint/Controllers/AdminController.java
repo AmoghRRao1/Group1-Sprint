@@ -8,17 +8,17 @@ import com.Group1.Sprint.Repositories.MatchesRepository;
 import com.Group1.Sprint.Repositories.TeamRepository;
 import com.Group1.Sprint.Repositories.TournamentRepository;
 import com.Group1.Sprint.Services.IAdminServices;
+import com.Group1.Sprint.Services.JWTutil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -35,6 +35,9 @@ public class AdminController {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @Autowired
+    private JWTutil jwTutil;
   
     private String adminusername="admin";
     private String adminpassword="admin123";
@@ -54,8 +57,10 @@ public class AdminController {
             }
             if(userDetails.get("username").equals(adminusername) && userDetails.get("password").equals(adminpassword))
             {
+                String to =this.jwTutil.generateToken(new User(userDetails.get("email"),userDetails.get("password"),new ArrayList<>()));
                 response.put("Status","Successful");
-                response.put("SessionID","1234");
+                response.put("Token",to);
+                response.put("Role","ADMIN");
                 return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
             }
         }
