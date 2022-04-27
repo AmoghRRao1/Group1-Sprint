@@ -75,7 +75,9 @@ public class BidderContoller {
         {
             if(bidderService.register(userDetails))
             {
+                String to =this.jwTutil.generateToken(new User(userDetails.getEmail(),userDetails.getPassword(),new ArrayList<>()));
                 response.put("Status","Successful");
+                response.put("Token",to);
                 //response.put("SessionID","1234");
             }
         }
