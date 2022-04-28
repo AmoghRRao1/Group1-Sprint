@@ -1,6 +1,7 @@
 package com.Group1.Sprint.Controllers;
 
 import com.Group1.Sprint.Models.BidderModel;
+import com.Group1.Sprint.Repositories.BidderRepository;
 import com.Group1.Sprint.Services.IBidderService;
 import com.Group1.Sprint.Services.JWTutil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,23 @@ public class BidderContoller {
     @Autowired
     private JWTutil jwTutil;
 
+    @Autowired
+    BidderRepository bidderRepository;
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String,String> loginDetails)
     {
         Map<String, String> response = new HashMap<>();
+
         try
         {
             if(bidderService.login(loginDetails))
             {
                 String to =this.jwTutil.generateToken(new User(loginDetails.get("email"),loginDetails.get("password"),new ArrayList<>()));
                 response.put("Status","Successful");
+                String bidderID = String.valueOf(bidderRepository.findByEmail(loginDetails.get("email")).get().getBidderId());
+                response.put("BidderID",bidderID);
                 response.put("Token",to);
+
                 return new ResponseEntity<Map<String, String>>(response, HttpStatus.OK);
             }
         }
