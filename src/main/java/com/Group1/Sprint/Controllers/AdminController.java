@@ -22,6 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AdminController {
     @Autowired
     IAdminServices adminServices;
@@ -57,7 +58,7 @@ public class AdminController {
             }
             if(userDetails.get("username").equals(adminusername) && userDetails.get("password").equals(adminpassword))
             {
-                String to =this.jwTutil.generateToken(new User(userDetails.get("email"),userDetails.get("password"),new ArrayList<>()));
+                String to =this.jwTutil.generateToken(new User(userDetails.get("username"),userDetails.get("password"),new ArrayList<>()));
                 response.put("Status","Successful");
                 response.put("Token",to);
                 response.put("Role","ADMIN");
@@ -118,16 +119,20 @@ public class AdminController {
         {
             response.put("Status","Failed");
             response.put("Error","Enter Team Name");
+            return ResponseEntity.badRequest().body(response);
         }
         if(teamDetails.get("teamcount")==null)
         {
             response.put("Status","Failed");
             response.put("Error","Enter Number of players");
+            return ResponseEntity.badRequest().body(response);
         }
+
         TeamModel teamModel = new TeamModel(teamDetails.get("teamname"),teamDetails.get("teamcount"));
         teamRepository.save(teamModel);
         response.put("Status","Successful");
         return ResponseEntity.ok().body(response);
+
     }
 
     @PostMapping("/createTournament")

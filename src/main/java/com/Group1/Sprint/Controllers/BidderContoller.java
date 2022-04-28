@@ -16,6 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bidder")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BidderContoller {
 
     @Autowired
