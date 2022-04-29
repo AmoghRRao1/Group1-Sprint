@@ -41,7 +41,7 @@ public class AdminService implements IAdminServices{
     public boolean scheduleMatches(Map<String, String> matchDetails, int tournamentId) throws RuntimeException
     {
         Optional<MatchesModel> match = matchesRepository.findById(Integer.parseInt(matchDetails.get("id")));
-        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter dateformatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
         DateTimeFormatter timeformatter = DateTimeFormatter.ofPattern("HH:mm");
         if(match.isPresent())
         {
@@ -190,6 +190,18 @@ public class AdminService implements IAdminServices{
             return ResponseEntity.ok().body(match.get());
         } else {
             return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @Override
+    public List<Integer> getTeamTounaments(int tournamentId) {
+
+        Optional<TournamentModel> tournament = tournamentRepository.findById(tournamentId);
+        if(tournament.isPresent()) {
+            return tournament.get().getTeamIds();
+        } else {
+            return null;
         }
 
     }

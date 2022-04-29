@@ -186,5 +186,10 @@ public class AdminController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/getTeams/{id}")
+    public List<Integer> getTeamTounaments(@PathVariable(value = "id") int tournamentId)
+    {
+        return adminServices.getTeamTounaments(tournamentId);
+    }
 
 }

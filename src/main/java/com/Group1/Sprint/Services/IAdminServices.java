@@ -5,6 +5,7 @@ import com.Group1.Sprint.Models.MatchesModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -14,5 +15,8 @@ public interface IAdminServices {
     public boolean rescheduleMatches( Map<String, String> matchDetails, int matchId);
     public boolean setWinner(Map<String, String> winner, int matchId);
     public boolean createTournament(Map<String,String> tournamentDetails);
+
     ResponseEntity<MatchesModel> getMatchDetails(int matchId);
+
+    abstract List<Integer> getTeamTounaments(int tournamentId);
 }
